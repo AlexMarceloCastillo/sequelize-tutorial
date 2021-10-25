@@ -12,5 +12,7 @@ db.connection = new Sequelize(database, username, password, dbConfig);
 db.Tutorial = require("./models/tutorial")(db.connection, DataTypes);
 db.Comment = require("./models/comment")(db.connection, DataTypes);
 
+db.Tutorial.hasMany(db.Comment);
+db.Comment.belongsTo(db.Tutorial);
 
 module.exports = db;
