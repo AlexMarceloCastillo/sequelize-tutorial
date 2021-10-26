@@ -14,7 +14,7 @@ module.exports = {
       text: {
         type: Sequelize.STRING
       },
-      tutorialId: {
+      fk_tutorial: {
         type: Sequelize.INTEGER,
         references: {
           model: 'tutorials',

@@ -1,4 +1,5 @@
-const { Tutorial } = require("../database/db");
+const { Transaction } = require("sequelize");
+const { Tutorial, connection, Comment } = require("../database/db");
 
 
 module.exports = {
@@ -25,17 +26,34 @@ module.exports = {
     saveOne: async (req, res) => {
         let { title, description } = req.body;
         try {
-            await Tutorial.create({ title, description});
+            await Tutorial.create({ title, description });
             res.sendStatus(201);
         } catch (error) {
             res.status(500).json({ error })
         }
     },
     testTransaction: async (req, res) => {
+        // https://ultimateakash.com/blog-details/IiwzPGAKYAo=/How-to-implement-Transactions-in-Sequelize-&-Node.Js-(Express)
+        let t;
+        let { title, description, comments } = req.body;
         try {
-            res.status(201).json({ data: req.body })
+
+            t = await connection.transaction();
+
+            let data = await Tutorial.create(
+                { title, description, comments },
+                {
+                    include: [ Comment ],
+                    transaction: t 
+                }
+            );
+
+            t.commit();
+
+            res.status(201).json({ data });
         } catch (error) {
-            res.status(500).json({ error })
+            t.rollback();
+            res.status(500).json({ msg: "rollback", error })
         }
     }
 }
