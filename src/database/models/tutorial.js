@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Tutorial.hasMany(models.Comment, {
         foreignKey: 'fk_tutorials',
-        as: 'comments'
+        as: 'arraysOfComments'
       });
     }
   };
