@@ -1,10 +1,10 @@
-const { Tutorial, connection, Comment } = require("../database/db");
+const { Video, sequelize, Comentario } = require("../database/models/index");
 
 
 module.exports = {
     getAll: async (req, res) => {
         try {
-            let data = await Tutorial.findAll();
+            let data = await Video.findAll();
             res.status(200).json({ data });
         } catch (error) {
             res.status(500).json({ error });
@@ -13,7 +13,7 @@ module.exports = {
     getById: async (req, res) => {
         let { id } = req.params;
         try {
-            let data = await Tutorial.findAll({
+            let data = await Video.findAll({
                 where: { id }
             });
             
@@ -23,41 +23,25 @@ module.exports = {
         }
     },
     saveOne: async (req, res) => {
-        let { title, description } = req.body;
+        let { titulo, descripcion } = req.body;
         try {
-            await Tutorial.create({ title, description });
+            await Video.create({ titulo, descripcion });
             res.sendStatus(201);
         } catch (error) {
-            res.status(500).json({ error })
+            res.status(500).json({ error: error.message })
         }
     },
     testTransaction: async (req, res) => {
         // https://ultimateakash.com/blog-details/IiwzPGAKYAo=/How-to-implement-Transactions-in-Sequelize-&-Node.Js-(Express)
         let t;
-        let { title, description, arraysOfComments } = req.body;
+        let { titulo, descripcion, comentarios } = req.body;
         try {
 
             t = await connection.transaction();
 
-            let newTutorial = await Tutorial.create(
-                { title, description },
-                {
-                    transaction: t 
-                }
-            );
-
-            let arrayComments = arraysOfComments.map( (item) => {
-                item.fk_tutorial = newTutorial.id;
-                return item;
-            });
-
-            let newComments = await Comment.bulkCreate(arrayComments, {
-                transaction: t
-            });
-
             await t.commit();
 
-            res.status(201).json({ newTutorial, newComments });
+            res.status(201).json({ data: []});
         } catch (error) {
             t.rollback();
             res.status(500).json({ msg: "rollback", error: error.message })

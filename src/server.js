@@ -1,8 +1,8 @@
 const app = require("./app");
-const db = require("./database/db");
+const { sequelize } = require("./database/models/index");
 
 
 app.listen(app.get("port"), () => {
     console.log(`\n [ Server ]:http://localhost:${app.get("port")} \n`);
-    db.connection.sync({ force: false });
+    sequelize.sync({ force: false });
 });

@@ -1,9 +1,9 @@
-const { Comment } = require("../database/db");
+const { Comentario } = require("../database/models/index");
 
 module.exports = {
     getAll: async (req, res) => {
         try {
-            let data = await Comment.findAll();
+            let data = await Comentario.findAll();
             res.status(200).json({ data });
         } catch (error) {
             res.status(500).json({ error });
@@ -12,7 +12,7 @@ module.exports = {
     getById: async (req, res) => {
         let { id } = req.params;
         try {
-            let data = await Comment.findAll({
+            let data = await Comentario.findAll({
                 where: { id }
             });
             
@@ -22,9 +22,9 @@ module.exports = {
         }
     },
     saveOne: async (req, res) => {
-        let { name, text, tutorialId } = req.body;
+        let { usuario, mensaje, videoId } = req.body;
         try {
-            await Comment.create({ name, text, tutorialId});
+            await Comentario.create({ usuario, mensaje, fk_video: videoId });
             res.sendStatus(201);
         } catch (error) {
             res.status(500).json({ error })

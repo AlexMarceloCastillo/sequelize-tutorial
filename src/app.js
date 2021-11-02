@@ -13,12 +13,15 @@ app.use( Express.urlencoded({extended: false}));
 app.set("port", port);
 app.use(Cors());
 
+
 //Routes
 app.get("/", (req,res) => {
-    res.status(200).json({ msg: "Hello Word" });
+    res.sendStatus(200);
 });
-app.use("/api/v1", require("./routes/tutorial.routes"));
-app.use("/api/v1", require("./routes/comment.routes"));
+app.use("/api/v1", require("./routes/video.routes"));
+app.use("/api/v1", require("./routes/comentario.routes"));
+app.use("/api/v1", require("./routes/persona.routes"));
+app.use("/api/v1", require("./routes/comercio.routes"));
 
 
 
